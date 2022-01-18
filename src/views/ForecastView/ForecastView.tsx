@@ -16,7 +16,7 @@ export const ForecastView = ({ city }: ForecastViewProps) => {
     const [loading, setLoading] = useState(true);
     const [weather, setWeather] = useState<any>(null);
     const [current, setCurrent] = useState<any>(null);
-    const [error, setError] = useState<number>();
+    const [error, setError] = useState<string>();
 
     const getData = async (url: string, setter: (e: any) => void) => {
         await fetch(url)
@@ -42,8 +42,10 @@ export const ForecastView = ({ city }: ForecastViewProps) => {
                     setCurrent
                 );
             }, 1000);
+        } else {
+            setError('No city provided');
         }
-    }, [city]);
+    }, []);
 
     /* request 'onecall' weather for current & daily forecast */
     useEffect(() => {
@@ -62,10 +64,10 @@ export const ForecastView = ({ city }: ForecastViewProps) => {
                 <SunIcon />
             </div>
             <div className={classNames(styles.errorMessage, { [styles.visible]: error })}>
-                Could not fetch weather: <span>#{error}</span>
+                Could not fetch weather: <span>{error}</span>
             </div>
             {current && weather && (
-                <div className={classNames(styles.innerContainer, { [styles.loaded]: !loading })}>
+                <div className={styles.innerContainer}>
                     <div className={styles.currentContainer}>
                         <CurrentWidget current={current} weather={weather} />
                     </div>
