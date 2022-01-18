@@ -1,0 +1,25 @@
+@import './styleguide.scss';
+
+html,
+body {
+    height: 100%;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: $text-font;
+    font-weight: 400;
+}

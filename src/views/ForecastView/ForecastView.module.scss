@@ -1,0 +1,67 @@
+@import '../../styles/styleguide';
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right top, #e0edfa, #c9dcef, #b2cce4, #9abcda, #82accf);
+}
+
+.currentContainer {
+    margin-top: -80px;
+    width: 550px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: $white;
+}
+
+.sunIcon {
+    margin-bottom: 50px;
+}
+
+.temp {
+    font-weight: 800;
+    font-size: 70px;
+}
+
+.desc {
+    text-transform: capitalize;
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.city {
+    font-weight: 300;
+    font-size: 18px;
+}
+
+.detailsRow {
+    display: flex;
+    gap: 30px;
+    margin-top: 50px;
+    width: fit-content;
+}
+
+.detail {
+    width: fit-content;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 18px;
+
+    & > svg {
+        height: 100%;
+        width: fit-content;
+        margin-right: 10px;
+    }
+}
