@@ -49,4 +49,9 @@
         transition: background-color 0.2s ease-in-out;
         background-color: darken(#edf5fd, 2%);
     }
+
+    &.empty {
+        border-color: #eb8e8e;
+        background-color: #ffe3e3;
+    }
 }
