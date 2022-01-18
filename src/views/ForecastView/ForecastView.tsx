@@ -1,59 +1,62 @@
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import React, { useCallback, useEffect, useState } from 'react';
-import { getTypeParameterOwner } from 'typescript';
+
 import styles from './ForecastView.module.scss';
+import { DailyWidget } from '../../components/DailyWidget/DailyWidget';
 
 export interface ForecastViewProps {
     city: string;
 }
 
 export const ForecastView = ({ city }: ForecastViewProps) => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const API_KEY = '50ca162c11794e82bbaaf6a9239ed53e';
 
     const [weather, setWeather] = useState<any>(null);
-    const [coords, setCoords] = useState<any>(null);
+    const [current, setCurrent] = useState<any>(null);
 
-    const getData = async (url: string, setter: (e: any) => void, prop?: string) => {
+    const getData = async (url: string, setter: (e: any) => void) => {
         await fetch(url)
             .then(res => {
                 return res.json();
             })
             .then(json => {
-                setter(prop ? json[prop] : json);
-                console.log(prop ? json[prop] : json);
+                setter(json);
+                console.log(json);
             });
     };
 
-    /* request current forecast to get city longitute and latitude */
+    /* request current forecast to get city longitute and latitude and name */
     useEffect(() => {
         if (city) {
             console.log('Seleted city: ' + city);
             getData(
                 `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`,
-                setCoords,
-                'coord'
+                setCurrent
             );
         }
     }, [city]);
 
-    /* request onecall weather for current & daily forecast */
+    /* request 'onecall' weather for current & daily forecast */
     useEffect(() => {
-        if (coords) {
+        if (current) {
             getData(
-                `https://api.openweathermap.org/data/2.5/onecall?lat=${coords.lat}&lon=${coords.lon}&units=metric&exclude=hourly,minutely,alerts&appid=${API_KEY}`,
+                `https://api.openweathermap.org/data/2.5/onecall?lat=${current.coord.lat}&lon=${current.coord.lon}&units=metric&exclude=hourly,minutely,alerts&appid=${API_KEY}`,
                 setWeather
             );
         }
-    }, [coords]);
+    }, [current]);
 
     return (
         <div className={styles.container}>
-            <div className={styles.currentContainer}>
-                {/* prettier-ignore */}
-                <svg className={styles.sunIcon} width="85" height="85" viewBox="0 0 85 85" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M42.36 62.36C53.4057 62.36 62.36 53.4057 62.36 42.36C62.36 31.3143 53.4057 22.36 42.36 22.36C31.3143 22.36 22.36 31.3143 22.36 42.36C22.36 53.4057 31.3143 62.36 42.36 62.36Z" fill="#E0EDFA"/> <path d="M42.36 84.72L33.86 70H50.86L42.36 84.72Z" fill="#E0EDFA"/> <path d="M42.36 0L50.86 14.72H33.86L42.36 0Z" fill="#E0EDFA"/> <path d="M84.72 42.36L70 50.86V33.86L84.72 42.36Z" fill="#E0EDFA"/> <path d="M0 42.36L14.72 33.86V50.86L0 42.36Z" fill="#E0EDFA"/> <path d="M72.31 12.41L67.92 28.83L55.89 16.81L72.31 12.41Z" fill="#E0EDFA"/> <path d="M12.41 72.31L16.81 55.89L28.83 67.92L12.41 72.31Z" fill="#E0EDFA"/> <path d="M72.31 72.31L55.89 67.92L67.92 55.89L72.31 72.31Z" fill="#E0EDFA"/> <path d="M12.41 12.41L28.83 16.81L16.81 28.83L12.41 12.41Z" fill="#E0EDFA"/> </svg>
-                {weather && (
-                    <>
-                        {/* <div className={styles.city}>{current.name}</div> */}
+            {current && weather && (
+                <>
+                    <div className={styles.currentContainer}>
+                        <img
+                            draggable="false"
+                            src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@4x.png`}
+                        />
+                        <div className={styles.city}>{current.name}</div>
                         <div className={styles.temp}>{weather.current.temp} &deg;C</div>
                         <div className={styles.desc}>{weather.current.weather[0].description}</div>
                         <div className={styles.detailsRow}>
@@ -78,13 +81,40 @@ export const ForecastView = ({ city }: ForecastViewProps) => {
                                 className={classNames(styles.detail, styles.windSpeed)}
                             >
                                 {/* prettier-ignore */}
-                                <svg width="195" height="135" viewBox="0 0 195 135" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M121.875 0C106.283 0 91.9657 6.80063 82.8963 17.9518C79.7009 17.2375 76.4396 16.875 73.125 16.875C49.6069 16.875 30.4688 34.541 30.4688 56.25C30.4688 56.7995 30.4806 57.3377 30.5046 57.876C12.8837 62.71 0 77.8054 0 95.625C0 117.334 19.1382 135 42.6562 135H146.25C173.136 135 195 114.818 195 90C195 73.5975 185.229 58.7767 170.185 50.9326C170.482 48.9772 170.625 46.9884 170.625 45C170.625 20.193 148.761 0 121.875 0Z" fill="#FDFDFD"/> </svg>
+                                <svg width="195" height="135" viewBox="0 0 195 135" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fillRule="evenodd" clipRule="evenodd" d="M121.875 0C106.283 0 91.9657 6.80063 82.8963 17.9518C79.7009 17.2375 76.4396 16.875 73.125 16.875C49.6069 16.875 30.4688 34.541 30.4688 56.25C30.4688 56.7995 30.4806 57.3377 30.5046 57.876C12.8837 62.71 0 77.8054 0 95.625C0 117.334 19.1382 135 42.6562 135H146.25C173.136 135 195 114.818 195 90C195 73.5975 185.229 58.7767 170.185 50.9326C170.482 48.9772 170.625 46.9884 170.625 45C170.625 20.193 148.761 0 121.875 0Z" fill="#FDFDFD"/> </svg>
                                 {weather.current.clouds + ' %'}
                             </div>
                         </div>
-                    </>
-                )}
-            </div>
+                    </div>
+                    <div className={styles.nextDays}>
+                        <DailyWidget
+                            iconURL={`http://openweathermap.org/img/wn/${weather.daily[0].weather[0].icon}@2x.png`}
+                            label="Tommorow"
+                            temp={weather.daily[0].temp.day}
+                        />
+                        <DailyWidget
+                            iconURL={`http://openweathermap.org/img/wn/${weather.daily[1].weather[0].icon}@2x.png`}
+                            label={days[(new Date().getDay() + 2) % 7]} // next day name mod 7
+                            temp={weather.daily[1].temp.day}
+                        />
+                        <DailyWidget
+                            iconURL={`http://openweathermap.org/img/wn/${weather.daily[2].weather[0].icon}@2x.png`}
+                            label={days[(new Date().getDay() + 3) % 7]}
+                            temp={weather.daily[2].temp.day}
+                        />
+                        <DailyWidget
+                            iconURL={`http://openweathermap.org/img/wn/${weather.daily[3].weather[0].icon}@2x.png`}
+                            label={days[(new Date().getDay() + 4) % 7]}
+                            temp={weather.daily[3].temp.day}
+                        />
+                        <DailyWidget
+                            iconURL={`http://openweathermap.org/img/wn/${weather.daily[4].weather[0].icon}@2x.png`}
+                            label={days[(new Date().getDay() + 5) % 7]}
+                            temp={weather.daily[4].temp.day}
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 };
