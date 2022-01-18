@@ -13,7 +13,7 @@ export const SearchView = ({ city, setCity }: SearchViewProps) => {
     const navigate = useNavigate();
 
     return (
-        <div className={styles.container}>
+        <div className={styles.outerContainer}>
             <div className={styles.innerContainer}>
                 <input
                     onChange={e => setCity(e.target.value)}

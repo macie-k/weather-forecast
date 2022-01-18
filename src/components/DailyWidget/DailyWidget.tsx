@@ -12,8 +12,10 @@ export const DailyWidget = ({ iconURL, temp, label }: DailyWidgetProps) => {
         <div className={styles.container}>
             <img draggable="false" className={styles.icon} src={iconURL} alt="" />
             <div className={styles.tempContainer}>
-                <div className={styles.temp}>{temp}</div>
-                <div className={styles.unit}> &deg;C</div>
+                <div className={styles.temp}>
+                    {temp}
+                    <sup>&deg;C</sup>
+                </div>
             </div>
             <div className={styles.label}>{label}</div>
         </div>

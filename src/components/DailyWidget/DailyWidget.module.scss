@@ -25,6 +25,10 @@
     height: fit-content;
     font-weight: 800;
     font-size: 35px;
+
+    & > sup {
+        font-size: 0.45em;
+    }
 }
 
 .unit {

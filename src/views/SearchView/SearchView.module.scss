@@ -1,15 +1,16 @@
 @import '../../styles/styleguide';
 
-.container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+.outerContainer {
     display: flex;
-    justify-content: center;
     align-items: center;
-    background: linear-gradient(to right top, #e0edfa, #c9dcef, #b2cce4, #9abcda, #82accf);
+    justify-content: center;
+    width: 100vw;
+    height: fit-content;
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),
+        url('https://source.unsplash.com/random/1920x1080?landscape,nature');
+    background-blend-mode: screen;
+    background-size: cover;
 }
 
 .innerContainer {

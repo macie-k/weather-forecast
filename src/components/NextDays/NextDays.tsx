@@ -1,40 +1,33 @@
 import React from 'react';
 import { DailyWidget } from '../../components/DailyWidget/DailyWidget';
+import { WeatherData } from '../../services/weatherService';
 
 export interface NextDaysProps {
-    weather: any;
+    weatherData: WeatherData;
 }
 
-export const NextDays = ({ weather }: NextDaysProps) => {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const getDayLabel = (timestamp: number) => {
+    const today = new Date();
+    const date = new Date(timestamp * 1000);
 
+    if (date.getTime() - today.getTime() < 3600 * 24 * 1000) {
+        return 'Tommorow';
+    }
+
+    return date.toLocaleDateString('en-EN', { weekday: 'long' });
+};
+
+export const NextDays = ({ weatherData }: NextDaysProps) => {
     return (
         <>
-            <DailyWidget
-                iconURL={`http://openweathermap.org/img/wn/${weather.daily[0].weather[0].icon}@2x.png`}
-                label="Tommorow"
-                temp={weather.daily[0].temp.day}
-            />
-            <DailyWidget
-                iconURL={`http://openweathermap.org/img/wn/${weather.daily[1].weather[0].icon}@2x.png`}
-                label={days[(new Date().getDay() + 2) % 7]} // next day name mod 7
-                temp={weather.daily[1].temp.day}
-            />
-            <DailyWidget
-                iconURL={`http://openweathermap.org/img/wn/${weather.daily[2].weather[0].icon}@2x.png`}
-                label={days[(new Date().getDay() + 3) % 7]}
-                temp={weather.daily[2].temp.day}
-            />
-            <DailyWidget
-                iconURL={`http://openweathermap.org/img/wn/${weather.daily[3].weather[0].icon}@2x.png`}
-                label={days[(new Date().getDay() + 4) % 7]}
-                temp={weather.daily[3].temp.day}
-            />
-            <DailyWidget
-                iconURL={`http://openweathermap.org/img/wn/${weather.daily[4].weather[0].icon}@2x.png`}
-                label={days[(new Date().getDay() + 5) % 7]}
-                temp={weather.daily[4].temp.day}
-            />
+            {weatherData.nextDays.map((entry, i) => (
+                <DailyWidget
+                    key={`daily-${i}`}
+                    iconURL={`http://openweathermap.org/img/wn/${entry.weatherIcon}@2x.png`}
+                    label={getDayLabel(entry.timestamp)}
+                    temp={entry.temp}
+                />
+            ))}
         </>
     );
 };
